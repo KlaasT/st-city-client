@@ -15,13 +15,23 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
+      release_name: ${{ steps.version.outputs.release_name }}
+      release_body: ${{ steps.version.outputs.release_body }}
     steps:
       - id: version
         run: |
           if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
             echo "version=${{ github.event.client_payload.version }}" >> $GITHUB_OUTPUT
+            echo "release_name=${{ github.event.client_payload.release_name }}" >> $GITHUB_OUTPUT
+            
+            # Body kann mehrzeilig sein — EOF delimiter nutzen
+            echo "release_body<<EOF" >> $GITHUB_OUTPUT
+            echo '${{ github.event.client_payload.release_body }}' >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
           else
             echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+            echo "release_name=ST-City Chat ${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+            echo "release_body=Manual build" >> $GITHUB_OUTPUT
           fi
 
   build:
