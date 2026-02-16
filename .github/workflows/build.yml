@@ -116,18 +116,10 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.prepare.outputs.version }}
-          name: ST-City Chat ${{ needs.prepare.outputs.version }}
+          name: ${{ needs.prepare.outputs.release_name }}
           draft: false
           generate_release_notes: false
-          body: |
-            ## ST-City Chat ${{ needs.prepare.outputs.version }}
-
-            ### Downloads
-            - **Windows**: `st-city-setup.exe`
-            - **Linux (AppImage)**: Für alle Distributionen
-            - **Linux (Debian/Ubuntu)**: `.deb` Paket
-
-            Die App aktualisiert sich automatisch bei neuen Versionen.
+          body: ${{ needs.prepare.outputs.release_body }}
           files: |
             artifacts/**/*.exe
             artifacts/**/*.AppImage
