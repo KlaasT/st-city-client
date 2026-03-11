@@ -59,18 +59,34 @@ jobs:
           ref: ${{ needs.prepare.outputs.version }}
           token: ${{ secrets.PRIVATE_REPO_PAT }}
           path: source
-          sparse-checkout: electron
 
-      - name: Setup Node.js
+      - name: Setup Node.js Base
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: source/package-lock.json
+          
+      - name: Setup Node.js Electron
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
           cache-dependency-path: source/electron/package-lock.json
 
-      - name: Install dependencies
+      - name: Install dependencies Base
+        working-directory: source/
+        run: npm ci
+
+      - name: Install dependencies Electron
         working-directory: source/electron
         run: npm ci
+
+      - name: Build Common Views
+        working-directory: source
+        run: npm run build:chat
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Electron app
         working-directory: source/electron
