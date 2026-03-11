@@ -99,6 +99,9 @@ jobs:
           php -r "file_exists('source/.env') || copy('source/.env.example', 'source/.env');"
           php source/artisan key:generate --force
 
+      - name: Build Common Views
+        run: npm run --prefix source build
+        
       - name: Build Common Views (chat-dist)
         run: npm run --prefix source build:chat
 
