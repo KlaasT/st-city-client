@@ -90,7 +90,7 @@ jobs:
         shell: bash
         run: |
           if [ -f source/composer.json ] && [ ! -d source/vendor ]; then
-            composer install --working-dir=source --no-interaction --no-progress --prefer-dist
+            composer install --working-dir=source --no-interaction --no-progress --prefer-dist --ignore-platform-req=ext-sodium
           fi
 
       - name: Prepare Laravel environment for artisan
